@@ -16,7 +16,7 @@ jobs:
    # 必须先装 pnpm
    - name: 安装 pnpm
      uses: pnpm/action-setup@v2
-     with:
+     with:7
       version: 8
 
    # 配置Node环境
@@ -28,7 +28,7 @@ jobs:
 
    # 安装依赖
    - name: 安装项目依赖
-     run: pnpm install
+     run: pnpm install --ignore-workspace
 
    # 打包生成dist
    - name: 打包前端项目
