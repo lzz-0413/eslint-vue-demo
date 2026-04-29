@@ -16,7 +16,7 @@ jobs:
    # 必须先装 pnpm
    - name: 安装 pnpm
      uses: pnpm/action-setup@v2
-     with:7
+     with:
       version: 8
 
    # 配置Node环境
