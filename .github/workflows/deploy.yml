@@ -1,0 +1,51 @@
+name: 前端自动部署
+run-name: ${{ github.actor }} 自动打包部署
+
+on:
+ push:
+  branches: [main] # 推送main分支自动部署
+
+jobs:
+ build-deploy:
+  runs-on: ubuntu-latest
+  steps:
+   # 拉取代码
+   - name: 拉取项目代码
+     uses: actions/checkout@v4
+
+   # 配置Node环境
+   - name: 配置 Node 18
+     uses: actions/setup-node@v4
+     with:
+      node-version: 18
+      cache: 'npm'
+
+   # 安装依赖
+   - name: 安装项目依赖
+     run: npm install
+
+   # 打包生成dist
+   - name: 打包前端项目
+     run: npm run build
+
+   # SCP上传dist到阿里云
+   - name: 上传打包文件到服务器
+     uses: appleboy/scp-action@v0.1.7
+     with:
+      host: ${{ secrets.SERVER_IP }}
+      username: ${{ secrets.SERVER_USER }}
+      key: ${{ secrets.SERVER_SSH_KEY }}
+      source: dist/
+      target: /usr/local/frontend
+      overwrite: true
+
+   # 远程执行命令：重载nginx
+   - name: 重启 Nginx
+     uses: appleboy/ssh-action@master
+     with:
+      host: ${{ secrets.SERVER_IP }}
+      username: ${{ secrets.SERVER_USER }}
+      key: ${{ secrets.SERVER_SSH_KEY }}
+      script: |
+       nginx -t
+       systemctl restart nginx
