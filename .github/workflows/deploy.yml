@@ -18,15 +18,15 @@ jobs:
      uses: actions/setup-node@v4
      with:
       node-version: 22.12.0
-      cache: 'npm'
+      cache: 'pnpm'
 
    # 安装依赖
    - name: 安装项目依赖
-     run: npm install
+     run: pnpm install
 
    # 打包生成dist
    - name: 打包前端项目
-     run: npm run build
+     run: pnpm run build
 
    # SCP上传dist到阿里云
    - name: 上传打包文件到服务器
